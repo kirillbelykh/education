@@ -1,11 +1,13 @@
-from fastapi import FastAPI 
+from fastapi import FastAPI, status
 from pydantic import BaseModel
 
 app = FastAPI()
 
+
 class BookCreate(BaseModel):
     title: str
     pages: int 
+
 
 class BookResponse(BaseModel):
     id: int
@@ -28,7 +30,7 @@ def get_lesson_by_id(lesson_id: int):
     return {"number": lesson_id}
 
 
-@app.post("/books", response_model=BookResponse)
+@app.post("/books", response_model=BookResponse, status_code=status.HTTP_201_CREATED)
 def create_book(request: BookCreate):
     return {
         "id": 1,
