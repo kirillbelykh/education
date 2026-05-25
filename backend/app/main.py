@@ -3,10 +3,14 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-
 class BookCreate(BaseModel):
     title: str
     pages: int 
+
+class BookResponse(BaseModel):
+    id: int
+    title: str
+    pages: int
 
 
 @app.get("/")
@@ -24,6 +28,10 @@ def get_lesson_by_id(lesson_id: int):
     return {"number": lesson_id}
 
 
-@app.post("/books")
+@app.post("/books", response_model=BookResponse)
 def create_book(request: BookCreate):
-    return request
+    return {
+        "id": 1,
+        "title": request.title,
+        "pages": request.pages,
+    }
