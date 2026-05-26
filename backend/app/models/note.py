@@ -1,0 +1,19 @@
+from datetime import datetime
+
+from sqlalchemy import ForeignKey, String, Text, func, text
+from sqlalchemy.orm import Mapped, mapped_column
+
+from backend.app.core.database import Base
+
+
+class Note(Base):
+    __tablename__ = "notes"
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    content_type: Mapped[str] = mapped_column(String(50), nullable=False, server_default=text("'text'"))
+    is_deleted: Mapped[bool] = mapped_column(nullable=False, server_default=text("false"))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), nullable=False)
