@@ -1,12 +1,14 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, String, Text, func, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.app.core.database import Base
-from backend.app.models.user import User
 
-
+if TYPE_CHECKING:
+    from backend.app.models.user import User
+    
 class Note(Base):
     __tablename__ = "notes"
     
