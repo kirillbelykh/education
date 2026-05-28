@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from backend.app.models.note import Note
+from backend.app.models import Note
 from backend.app.schemas.note import NoteCreate
 
 
