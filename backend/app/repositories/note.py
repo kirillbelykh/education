@@ -1,4 +1,6 @@
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
 
 from backend.app.models import Note
 from backend.app.schemas.note import NoteCreate
@@ -15,8 +17,12 @@ def create_note(
         content=note_data.content,
         content_type=note_data.content_type,
     )
-
-    db.add(note)
-    db.commit()
-    db.refresh(note)
-    return note 
+    try:
+        db.add(note)
+        db.commit()
+        db.refresh(note)
+        return note 
+    
+    except IntegrityError:
+        db.rollback()
+        raise
