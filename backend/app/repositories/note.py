@@ -38,3 +38,16 @@ def get_notes(
     
     return notes 
     
+
+def get_note_by_id(
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note = db.scalars(
+        select(Note).where(Note.id == note_id,
+                           Note.user_id == user_id,
+                           Note.is_deleted.is_(False))
+            ).first()
+    
+    return note

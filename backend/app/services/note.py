@@ -3,7 +3,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from backend.app.repositories.note import (
-    create_note as generate_note, 
+    create_note as generate_note,
+    get_note_by_id, 
     get_notes,
     )
 from backend.app.schemas.note import NoteCreate
@@ -38,3 +39,24 @@ def get_all_notes(
     )
     
     return notes 
+
+
+def get_note(
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note = get_note_by_id(
+        db,
+        note_id,
+        user_id,
+    )
+    if note:
+        return note 
+    
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+            

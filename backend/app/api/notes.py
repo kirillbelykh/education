@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from backend.app.dependencies.database import get_db
 from backend.app.schemas.note import NoteCreate, NoteResponse
-from backend.app.services.note import create_new_note, get_all_notes
+from backend.app.services.note import create_new_note, get_all_notes, get_note
 
 
 router = APIRouter(prefix="/notes", tags=["notes"])
@@ -34,3 +34,16 @@ def get_notes(db: Annotated[Session, Depends(get_db)]):
     
     return notes 
     
+    
+@router.get("/{note_id}", response_model=NoteResponse)
+def get_note_by_id(
+    db: Annotated[Session, Depends(get_db)],
+    note_id: int,
+):
+    note = get_note(
+        db,
+        note_id,
+        user_id=3,
+    )
+    
+    return note
