@@ -7,10 +7,11 @@ from backend.app.dependencies.database import get_db
 from backend.app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 from backend.app.services.note import (
     create_new_note, 
-    delete_note, 
+    delete_note,
     get_all_notes, 
     get_note,
     get_notes_from_trash,
+    hard_delete_note_by_id,
     restore_note,
     update_note,
 )
@@ -108,3 +109,18 @@ def update_note_by_id(
     )
     
     return note_update 
+
+
+@router.delete("/trash/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_note_from_trash(
+    db: Annotated[Session, Depends(get_db)],
+    note_id: int,
+):
+    hard_delete_note_by_id(
+        db,
+        note_id,
+        user_id=3,
+    )
+    
+
+        

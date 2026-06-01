@@ -132,3 +132,23 @@ def update_note_by_id(
         return note 
 
     
+def delete_trashed_note(
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note = db.scalars(
+        select(Note).where(
+            Note.user_id == user_id, 
+            Note.id == note_id, 
+            Note.is_deleted.is_(True)
+        )
+    ).first()
+    
+    if note is None:
+        return None
+    
+    db.delete(note)
+    db.commit()
+    
+    return True 
