@@ -11,6 +11,7 @@ from backend.app.services.note import (
     get_all_notes, 
     get_note,
     get_notes_from_trash,
+    restore_note,
 )
 
 router = APIRouter(prefix="/notes", tags=["notes"])
@@ -76,3 +77,17 @@ def delete_note_by_id(
     )
     
     return note_delete
+
+
+@router.patch("/{note_id}/restore", response_model=NoteResponse)
+def restore_note_from_trash(
+    db: Annotated[Session, Depends(get_db)],
+    note_id: int,
+):
+    note = restore_note(
+        db,
+        note_id,
+        user_id=3
+    )
+    
+    return note

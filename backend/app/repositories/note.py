@@ -83,6 +83,29 @@ def get_trashed_notes(
     return notes_from_trash
 
 
+def restore_note_by_id(
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note = db.scalars(
+        select(Note).where(
+            Note.user_id == user_id, 
+            Note.id == note_id, 
+            Note.is_deleted.is_(True)
+        )
+    ).first()
+    
+    if note:
+        note.is_deleted = False
+        db.commit()
+        db.refresh(note)
+        return note
+    
+    return None 
+
+
+        
     
     
     
