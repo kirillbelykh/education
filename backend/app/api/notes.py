@@ -5,8 +5,12 @@ from sqlalchemy.orm import Session
 
 from backend.app.dependencies.database import get_db
 from backend.app.schemas.note import NoteCreate, NoteResponse
-from backend.app.services.note import create_new_note, get_all_notes, get_note
-
+from backend.app.services.note import (
+    create_new_note, 
+    delete_note, 
+    get_all_notes, 
+    get_note,
+)
 
 router = APIRouter(prefix="/notes", tags=["notes"])
 
@@ -47,3 +51,17 @@ def get_note_by_id(
     )
     
     return note
+
+
+@router.delete("/{note_id}", response_model=NoteResponse)
+def delete_note_by_id(
+    db: Annotated[Session, Depends(get_db)],
+    note_id: int,
+):
+    note_delete = delete_note(
+        db,
+        note_id,
+        user_id=3,
+    )
+    
+    return note_delete

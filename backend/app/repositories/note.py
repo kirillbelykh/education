@@ -51,3 +51,26 @@ def get_note_by_id(
             ).first()
     
     return note
+
+def delete_note_by_id(
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note = get_note_by_id(
+        db,
+        note_id,
+        user_id,
+    )
+    
+    if note:
+        note.is_deleted = True 
+        db.commit()
+        db.refresh(note)
+        return note 
+    
+    return None 
+    
+    
+    
+    

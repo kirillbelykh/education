@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from backend.app.repositories.note import (
     create_note as generate_note,
+    delete_note_by_id,
     get_note_by_id, 
     get_notes,
     )
@@ -60,3 +61,24 @@ def get_note(
             detail="Note not found"
         )
             
+    
+def delete_note(
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note_delete = delete_note_by_id(
+        db,
+        note_id,
+        user_id,
+    )
+    
+    if note_delete:
+        return note_delete
+    
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+    
