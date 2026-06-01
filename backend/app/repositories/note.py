@@ -1,9 +1,9 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from backend.app.models import Note
-from backend.app.schemas.note import NoteCreate
+from backend.app.schemas.note import NoteCreate, NoteUpdate
 
 
 def create_note(
@@ -105,7 +105,30 @@ def restore_note_by_id(
     return None 
 
 
+def update_note_by_id(
+    note_data: NoteUpdate,
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note = get_note_by_id(
+        db,
+        note_id,
+        user_id,
+    )
+    
+    if note is None:
+        return None
+    
+    update_data = note_data.model_dump(exclude_unset=True)
+    
+    if note:
+        for f_name, f_value in update_data.items():
+            setattr(note, f_name, f_value)
+            
+        db.commit()
+        db.refresh(note)
         
-    
-    
+        return note 
+
     

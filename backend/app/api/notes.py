@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from backend.app.dependencies.database import get_db
-from backend.app.schemas.note import NoteCreate, NoteResponse
+from backend.app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 from backend.app.services.note import (
     create_new_note, 
     delete_note, 
@@ -12,6 +12,7 @@ from backend.app.services.note import (
     get_note,
     get_notes_from_trash,
     restore_note,
+    update_note,
 )
 
 router = APIRouter(prefix="/notes", tags=["notes"])
@@ -91,3 +92,19 @@ def restore_note_from_trash(
     )
     
     return note
+
+
+@router.patch("/{note_id}", response_model=NoteResponse)
+def update_note_by_id(
+    request: NoteUpdate,
+    db: Annotated[Session, Depends(get_db)],
+    note_id: int,
+):
+    note_update = update_note(
+        request,
+        db,
+        note_id,
+        user_id=3,
+    )
+    
+    return note_update 

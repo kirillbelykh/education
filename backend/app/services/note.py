@@ -9,8 +9,9 @@ from backend.app.repositories.note import (
     get_notes,
     get_trashed_notes,
     restore_note_by_id,
+    update_note_by_id,
     )
-from backend.app.schemas.note import NoteCreate
+from backend.app.schemas.note import NoteCreate, NoteUpdate
 
 
 def create_new_note(
@@ -115,3 +116,28 @@ def restore_note(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Note not found"
         )
+        
+    
+def update_note(
+    note_data: NoteUpdate,
+    db: Session,
+    note_id: int,
+    user_id: int,
+):
+    note_update = update_note_by_id(
+        note_data,
+        db,
+        note_id,
+        user_id,
+    )
+    
+    if note_update:
+        return note_update
+    
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+        
+        
