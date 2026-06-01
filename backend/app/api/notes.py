@@ -10,6 +10,7 @@ from backend.app.services.note import (
     delete_note, 
     get_all_notes, 
     get_note,
+    get_notes_from_trash,
 )
 
 router = APIRouter(prefix="/notes", tags=["notes"])
@@ -37,6 +38,16 @@ def get_notes(db: Annotated[Session, Depends(get_db)]):
     )
     
     return notes 
+    
+
+@router.get("/trash", response_model=list[NoteResponse])
+def get_trashed_notes(db: Annotated[Session, Depends(get_db)]):
+    trashed_notes = get_notes_from_trash(
+        db,
+        user_id=3,
+    )
+    
+    return trashed_notes
     
     
 @router.get("/{note_id}", response_model=NoteResponse)

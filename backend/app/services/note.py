@@ -7,6 +7,7 @@ from backend.app.repositories.note import (
     delete_note_by_id,
     get_note_by_id, 
     get_notes,
+    get_trashed_notes,
     )
 from backend.app.schemas.note import NoteCreate
 
@@ -75,6 +76,24 @@ def delete_note(
     
     if note_delete:
         return note_delete
+    
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Note not found"
+        )
+        
+def get_notes_from_trash(
+    db: Session, 
+    user_id: int,
+):
+    notes = get_trashed_notes(
+        db,
+        user_id
+    )
+    
+    if notes:
+        return notes
     
     else:
         raise HTTPException(

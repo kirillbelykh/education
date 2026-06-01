@@ -71,6 +71,18 @@ def delete_note_by_id(
     
     return None 
     
+
+def get_trashed_notes(
+    db: Session,
+    user_id: int,
+):
+    notes_from_trash = db.scalars(
+        select(Note).where(Note.user_id == user_id, Note.is_deleted.is_(True))
+    ).all()
+    
+    return notes_from_trash
+
+
     
     
     
