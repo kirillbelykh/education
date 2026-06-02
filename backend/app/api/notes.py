@@ -3,7 +3,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from backend.app.dependencies.auth import get_current_user
 from backend.app.dependencies.database import get_db
+from backend.app.models.user import User
 from backend.app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 from backend.app.services.note import (
     create_new_note,
@@ -23,31 +25,38 @@ router = APIRouter(prefix="/notes", tags=["notes"])
 def create_note(
     request: NoteCreate,
     db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     note = create_new_note(
         db,
         request,
-        user_id=3,
+        user_id=current_user.id,
     )
     
     return note
 
 
 @router.get("", response_model=list[NoteResponse])
-def get_notes(db: Annotated[Session, Depends(get_db)]):
+def get_notes(
+    db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+):
     notes = get_all_notes(
         db,
-        user_id=3,
+        user_id=current_user.id,
     )
     
     return notes
     
 
 @router.get("/trash", response_model=list[NoteResponse])
-def get_trashed_notes(db: Annotated[Session, Depends(get_db)]):
+def get_trashed_notes(
+    db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+):
     trashed_notes = get_notes_from_trash(
         db,
-        user_id=3,
+        user_id=current_user.id,
     )
     
     return trashed_notes
@@ -57,11 +66,12 @@ def get_trashed_notes(db: Annotated[Session, Depends(get_db)]):
 def get_note_by_id(
     db: Annotated[Session, Depends(get_db)],
     note_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     note = get_note(
         db,
         note_id,
-        user_id=3,
+        user_id=current_user.id,
     )
     
     return note
@@ -71,11 +81,12 @@ def get_note_by_id(
 def delete_note_by_id(
     db: Annotated[Session, Depends(get_db)],
     note_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     note_delete = delete_note(
         db,
         note_id,
-        user_id=3,
+        user_id=current_user.id,
     )
     
     return note_delete
@@ -85,11 +96,12 @@ def delete_note_by_id(
 def restore_note_from_trash(
     db: Annotated[Session, Depends(get_db)],
     note_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     note = restore_note(
         db,
         note_id,
-        user_id=3,
+        user_id=current_user.id,
     )
     
     return note
@@ -100,12 +112,13 @@ def update_note_by_id(
     request: NoteUpdate,
     db: Annotated[Session, Depends(get_db)],
     note_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     note_update = update_note(
         request,
         db,
         note_id,
-        user_id=3,
+        user_id=current_user.id,
     )
     
     return note_update
@@ -115,11 +128,12 @@ def update_note_by_id(
 def delete_note_from_trash(
     db: Annotated[Session, Depends(get_db)],
     note_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
 ):
     hard_delete_note_by_id(
         db,
         note_id,
-        user_id=3,
+        user_id=current_user.id,
     )
     
 
