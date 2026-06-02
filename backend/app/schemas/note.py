@@ -5,7 +5,7 @@ from pydantic import BaseModel
 class NoteCreate(BaseModel):
     title: str
     content: str
-    content_type: str 
+    content_type: str
 
 
 class NoteUpdate(BaseModel):
@@ -19,6 +19,6 @@ class NoteResponse(BaseModel):
     title: str
     content: str
     content_type: str
-    created_at: datetime 
+    created_at: datetime
     updated_at: datetime
     is_deleted: bool

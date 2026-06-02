@@ -6,12 +6,12 @@ from backend.app.repositories.note import (
     create_note as generate_note,
     delete_note_by_id,
     delete_trashed_note,
-    get_note_by_id, 
+    get_note_by_id,
     get_notes,
     get_trashed_notes,
     restore_note_by_id,
     update_note_by_id,
-    )
+)
 from backend.app.schemas.note import NoteCreate, NoteUpdate
 
 
@@ -59,10 +59,9 @@ def get_note(
     if note:
         return note 
     
-    else:
-        raise HTTPException(
+    raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found"
+            detail="Note not found",
         )
             
     
@@ -80,10 +79,9 @@ def delete_note(
     if note_delete:
         return note_delete
     
-    else:
-        raise HTTPException(
+    raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found"
+            detail="Note not found",
         )
         
 def get_notes_from_trash(
@@ -112,10 +110,9 @@ def restore_note(
     if note:
         return note
     
-    else:
-        raise HTTPException(
+    raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found"
+            detail="Note not found",
         )
         
     
@@ -135,10 +132,9 @@ def update_note(
     if note_update:
         return note_update
     
-    else:
-        raise HTTPException(
+    raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found"
+            detail="Note not found",
         )
         
         
@@ -156,8 +152,7 @@ def hard_delete_note_by_id(
     if note_delete:
         return note_delete
     
-    else:
-        raise HTTPException(
+    raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found"
+            detail="Note not found",
         )

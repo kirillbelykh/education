@@ -1,4 +1,4 @@
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -33,8 +33,11 @@ def get_notes(
     user_id: int,
 ):
     notes = db.scalars(
-        select(Note).where(Note.user_id == user_id, Note.is_deleted.is_(False))
-            ).all()
+        select(Note).where(
+            Note.user_id == user_id, 
+            Note.is_deleted.is_(False),
+        )
+    ).all()
     
     return notes 
     
@@ -45,9 +48,10 @@ def get_note_by_id(
     user_id: int,
 ):
     note = db.scalars(
-        select(Note).where(Note.id == note_id,
-                           Note.user_id == user_id,
-                           Note.is_deleted.is_(False))
+        select(Note).where(
+            Note.id == note_id,
+            Note.user_id == user_id,
+            Note.is_deleted.is_(False))
             ).first()
     
     return note

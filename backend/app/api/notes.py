@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session
 from backend.app.dependencies.database import get_db
 from backend.app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 from backend.app.services.note import (
-    create_new_note, 
+    create_new_note,
     delete_note,
-    get_all_notes, 
+    get_all_notes,
     get_note,
     get_notes_from_trash,
     hard_delete_note_by_id,
@@ -40,7 +40,7 @@ def get_notes(db: Annotated[Session, Depends(get_db)]):
         user_id=3,
     )
     
-    return notes 
+    return notes
     
 
 @router.get("/trash", response_model=list[NoteResponse])
@@ -89,7 +89,7 @@ def restore_note_from_trash(
     note = restore_note(
         db,
         note_id,
-        user_id=3
+        user_id=3,
     )
     
     return note
@@ -108,7 +108,7 @@ def update_note_by_id(
         user_id=3,
     )
     
-    return note_update 
+    return note_update
 
 
 @router.delete("/trash/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
