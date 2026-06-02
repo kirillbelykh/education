@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from backend.app.core.security import create_access_token
 from backend.app.repositories.user import create_user, get_user_by_email
 from backend.app.schemas.user import TokenResponse, UserCreate, UserLogin
 
@@ -45,11 +46,11 @@ def login_user(
         )
     
     if verify_password(user_data.password, user.password_hash):
-        access_token = TokenResponse(
-            access_token=f"fake-token-for-user-{user.id}",
+        token = TokenResponse(
+            access_token=create_access_token(user.id),
             token_type="bearer",
         )
-        return access_token
+        return token
     
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
