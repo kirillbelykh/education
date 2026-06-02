@@ -1,8 +1,15 @@
 from datetime import datetime, timedelta, timezone
 
 from jose import JWTError, jwt
+from passlib.context import CryptContext
 
 from backend.app.core.config import settings
+
+
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto",
+)
 
 
 def create_access_token(user_id: int) -> str:
@@ -35,3 +42,11 @@ def decode_access_token(token: str) -> int:
         raise JWTError("Token subject is missing")
     
     return int(user_id)
+
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+def verify_password(password: str, password_hash: str) -> bool:
+    return pwd_context.verify(password, password_hash)
