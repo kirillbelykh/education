@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from backend.app.dependencies.auth import get_current_user
@@ -33,12 +34,15 @@ def register_new_user(
 
 @router.post("/login", response_model=TokenResponse)
 def login(
-    request: UserLogin,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[Session, Depends(get_db)],
 ):
     token = login_user(
         db,
-        request,
+        UserLogin(
+            email=form_data.username,
+            password=form_data.password,
+        ),
     )
     
     return token
@@ -48,5 +52,5 @@ def login(
 def get_user(
     user: Annotated[User, Depends(get_current_user)],
 ):
-    return user 
+    return user
     
