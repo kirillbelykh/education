@@ -9,9 +9,9 @@ from backend.app.dependencies.database import get_db
 from backend.app.models.user import User
 from backend.app.services.user import login_user, register_user
 from backend.app.schemas.user import (
-    TokenResponse, 
-    UserCreate, 
-    UserLogin, 
+    TokenResponse,
+    UserCreate,
+    UserLogin,
     UserResponse,
 )
 
