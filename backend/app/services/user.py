@@ -1,6 +1,6 @@
-from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from backend.app.core.exceptions import raise_credentials_exception, raise_email_already_registered
 from backend.app.core.security import create_access_token, hash_password, verify_password
 from backend.app.repositories.user import create_user, get_user_by_email
 from backend.app.schemas.user import TokenResponse, UserCreate, UserLogin
@@ -12,10 +12,8 @@ def register_user(
 ):
     user_exist = get_user_by_email(db, user_data.email)
     if user_exist:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered",
-        )
+        raise_email_already_registered()
+        
     password_hash = hash_password(user_data.password)
     user = create_user(
         db,
@@ -32,10 +30,7 @@ def login_user(
 ):
     user = get_user_by_email(db, user_data.email)
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
-        )
+        raise_credentials_exception()
     
     if verify_password(user_data.password, user.password_hash):
         token = TokenResponse(
@@ -44,7 +39,4 @@ def login_user(
         )
         return token
     
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid email or password",
-    )
+    raise_credentials_exception()

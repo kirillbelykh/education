@@ -1,7 +1,7 @@
-from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from backend.app.core.exceptions import raise_note_not_found, raise_unable_to_create_note
 from backend.app.repositories.note import (
     create_note as generate_note,
     delete_note_by_id,
@@ -27,10 +27,7 @@ def create_new_note(
             user_id,
         )
     except IntegrityError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Unable to create note",
-        )
+        raise_unable_to_create_note()
         
     return note
 
@@ -59,10 +56,7 @@ def get_note(
     if note:
         return note 
     
-    raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found",
-        )
+    raise_note_not_found()
             
     
 def delete_note(
@@ -79,10 +73,7 @@ def delete_note(
     if note_delete:
         return note_delete
     
-    raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found",
-        )
+    raise_note_not_found()
         
 def get_notes_from_trash(
     db: Session, 
@@ -110,10 +101,7 @@ def restore_note(
     if note:
         return note
     
-    raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found",
-        )
+    raise_note_not_found()
         
     
 def update_note(
@@ -132,10 +120,7 @@ def update_note(
     if note_update:
         return note_update
     
-    raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found",
-        )
+    raise_note_not_found()
         
         
 def hard_delete_note_by_id(
@@ -152,7 +137,4 @@ def hard_delete_note_by_id(
     if note_delete:
         return note_delete
     
-    raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Note not found",
-        )
+    raise_note_not_found()

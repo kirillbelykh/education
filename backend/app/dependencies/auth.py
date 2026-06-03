@@ -1,10 +1,11 @@
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
 from sqlalchemy.orm import Session
 
+from backend.app.core.exceptions import raise_credentials_exception
 from backend.app.core.security import decode_access_token
 from backend.app.dependencies.database import get_db
 from backend.app.repositories.user import get_user_by_id
@@ -19,20 +20,14 @@ def get_current_user(
     try:
         user_id = decode_access_token(token)
     except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-        )
+        raise_credentials_exception()
     user = get_user_by_id(
         db,
         user_id,
     )
     
     if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-        )
+        raise_credentials_exception()
     
     return user
     
