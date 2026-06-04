@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 
 import Header from "./components/Header";
 import NotesList from "./components/NotesList";
+import LoginForm from "./components/LoginForm";
 
 function App() {
   const [notes, setNotes] = useState([]);
+  const [accessToken, setAccessToken] = useState(
+    localStorage.getItem("accessToken")
+  );
+
   useEffect(() => {
     async function loadNotes() {
-      const accessToken = localStorage.getItem("accessToken");
       if (!accessToken) {
         console.log("No access token");
         return;
@@ -22,6 +26,13 @@ function App() {
 
       if (!response.ok) {
         console.log("Failed to load notes");
+
+        if (response.status === 401) {
+          localStorage.removeItem("accessToken");
+          setAccessToken(null);
+          setNotes([]);
+        }
+
         return;
       }
 
@@ -30,12 +41,26 @@ function App() {
       setNotes(notesFromBackend);
     }
     loadNotes();
-  }, []);
+  }, [accessToken]);
+
+  function handleLogin(token) {
+    setAccessToken(token);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("accessToken");
+    setAccessToken(null);
+    setNotes([]);
+  }
 
   return (
     <div>
-      <Header />
-      <NotesList notes={notes} />
+      <Header onLogout={handleLogout} />
+      {accessToken ? (
+        <NotesList notes={notes} />
+      ) : (
+        <LoginForm onLogin={handleLogin} />
+      )}
     </div>
   );
 }

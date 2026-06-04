@@ -4,7 +4,6 @@ import { useState } from "react";
 function LoginForm({ onLogin }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -31,16 +30,16 @@ function LoginForm({ onLogin }) {
         <form onSubmit={handleSubmit}>
             <input 
                 type="email"
-                placeholder="email"
+                placeholder="Email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
             />
-            
+
             <input
                 type="password"
-                placeholder="password"
+                placeholder="Password"
                 value={password}
-                onChange={(password) => setPassword(event.target.value)}
+                onChange={(event) => setPassword(event.target.value)}
             />
 
             <button type="submit">Login</button>
